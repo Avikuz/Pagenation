@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Pagination</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS v5.2.1 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+
+        <style>
+                    a {
+        text-decoration: none;
+        display: inline-block;
+        padding: 8px 16px;
+        }
+
+        a:hover {
+        background-color: #ddd;
+        color: black;
+        }
+
+        .previous {
+        background-color: #f1f1f1;
+        color: black;
+        }
+
+        .next {
+        background-color: #04AA6D;
+        color: white;
+        }
+
+        </style>
+</head>
+
+<body class="container">
+    <br>
+    <button class="btn btn-primary" onclick="getData();">Get Data</button>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>UserId</th>
+                <th>id</th>
+                <th>title</th>
+                <th>body</th>
+            </tr>
+        </thead>
+        <tbody id="users">
+
+        </tbody>
+    </table>
+    <button id="btn" style="border: none;" onclick="prev()"><a href="#" id="prev" class="previous">&laquo; Previous</a></button>
+    <a href="#" id="next" onclick="next()" class="next">Next &raquo;</a>
+
+    <!-- Bootstrap JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+        </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+        integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+        </script>
+    
+    <script>
+        
+            //tbody.innerHTML += row;
+
+        // function getData() {
+        //     var http = new XMLHttpRequest();
+        //     http.onreadystatechange = function(){
+        //         if(this.readyState == 4 && this.status == 200){
+        //             var data = this.responseText;
+        //             var jsonData = JSON.parse(data);
+        //             console.log(jsonData.data);
+
+        //             jsonData.data.forEach(user => {
+        //                 var row = `
+        //                 <tr>
+        //                     <td>${user.id}</td>
+        //                     <td>${user.first_name}</td>
+        //                     <td>${user.last_name}</td>
+        //                     <td>${user.email}</td>
+        //                     <td>Avatar</td>
+        //                 </tr>`;
+        //                 tbody.innerHTML += row;
+        //             });
+        //         }
+        //     }
+        //     http.open('GET', 'https://reqres.in/api/users');
+        //     http.send();
+        // }
+        var count = null;
+        var con = null;
+        var divs = null;
+        var tbody = document.getElementById("users")
+        var btn = document.getElementById('btn')
+        function getData(){
+            fetch('http://jsonplaceholder.typicode.com/posts')
+            .then(response => response.json())
+            .then(jsonData => {
+                for (let user = 0; user < 10; user++) {
+                    count=user;
+                    con = count+10;
+                    divs=count;
+                    let obj = jsonData[user];
+                    createRow(obj)
+                    console.log(count)
+                }
+            });
+        }
+
+        function createRow(user){
+            var row = `
+                <tr>
+                    <td>${user.userId}</td>
+                    <td>${user.id}</td>
+                    <td>${user.title}</td>
+                    <td>${user.body}</td>
+                </tr>`;
+                tbody.innerHTML += row;
+        }
+        function next(){
+            fetch('http://jsonplaceholder.typicode.com/posts')
+            .then(response => response.json())
+            .then(jsonData => {
+                    divs=con;
+                    tbody.innerHTML = "";
+                    for (let user = count; user<con; user++) {
+                        if(count < divs) {
+                            count=user;
+                            con = count+10;
+                            let obj = jsonData[user];
+                            createRow(obj)
+                        }
+                }
+            });
+
+        }
+        function prev(){
+            fetch('http://jsonplaceholder.typicode.com/posts')
+            .then(response => response.json())
+            .then(jsonData => {
+                    divs=con-20;
+                    con=divs
+                    count = count-19;
+                    tbody.innerHTML = "";
+                    for (let user = count; user<con; user++) {
+                        if(count < divs) {
+                            count=user;
+                            con = count+10;
+                            let obj = jsonData[user];
+                            createRow(obj)
+                            console.log(count)
+                        }
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
